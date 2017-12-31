@@ -15,4 +15,4 @@ $message = "?$message&signature=$signature"
 $resource = "https://api.binance.com/api/v3/allOrders$message"
 $allorders = Invoke-RestMethod -Method Get -Uri "$resource" -Header @{ "X-MBX-APIKEY" = $apiKey }
 
-$allorders
+$allorders | Format-Table
