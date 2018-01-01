@@ -1072,6 +1072,65 @@ function Test-BinBuyOrder
     }
 }
 
+<#
+.Synopsis
+   Get current price
+.DESCRIPTION
+   Latest price for a symbol or symbols.
+.EXAMPLE
+   Get-BinPrice
+.INPUTS
+   Inputs to this cmdlet (if any)
+.OUTPUTS
+   Output from this cmdlet (if any)
+.NOTES
+   General notes
+.COMPONENT
+   Binance Exchange
+.ROLE
+   The role this cmdlet belongs to
+.FUNCTIONALITY
+   The functionality that best describes this cmdlet
+#>
+function Get-BinPrice
+{
+    [CmdletBinding(SupportsShouldProcess=$true, 
+                   PositionalBinding=$false,
+                   HelpUri = 'http://www.microsoft.com/',
+                   ConfirmImpact='Medium')]
+    [Alias()]
+    [OutputType([String[]])]
+    Param
+    (
+        # Trade symbol
+        [Parameter(Mandatory=$true, 
+                   ValueFromPipeline=$true,
+                   ValueFromPipelineByPropertyName=$true, 
+                   ValueFromRemainingArguments=$false,
+                   Position=0)]
+        [ValidateNotNullOrEmpty()]
+        $Symbol
+    )
+
+    Begin
+    {
+    }
+    Process
+    {
+        if ($pscmdlet.ShouldProcess("Target", "Operation"))
+        {
+            $message = "?symbol=$symbol"
+
+            $resource = "https://api.binance.com/api/v3/ticker/price$message"
+            $openorders = Invoke-RestMethod -Method Get -Uri "$resource" -Header @{ "X-MBX-APIKEY" = $apiKey }
+            $openorders
+        }
+    }
+    End
+    {
+    }
+}
+
 
 <#
 
