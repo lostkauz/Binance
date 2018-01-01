@@ -16,3 +16,17 @@ $resource = "https://api.binance.com/api/v3/allOrders$message"
 $allorders = Invoke-RestMethod -Method Get -Uri "$resource" -Header @{ "X-MBX-APIKEY" = $apiKey }
 
 $allorders | Format-Table
+
+Remove-Module psbinance
+Import-Module .\PSBinance.psm1
+
+$icxorders = Get-BinAllOrders ICXBNB
+$icxtrades = Get-BinAllTrades ICXBNB
+foreach( $icx in $icxorders )
+{
+        Write-Output $icx.orderid " " $icx.side
+        Get-BinAllTrades $icx.symbol -OrderID $icx.orderId | ft
+        #$icxtrades.where{ $_.orderid -eq $icx.orderid} | ft
+}
+
+$deps = Get-BinDeposits
