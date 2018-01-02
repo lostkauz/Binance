@@ -1131,6 +1131,64 @@ function Get-BinPrice
     }
 }
 
+<#
+.Synopsis
+   Get order book ticker
+.DESCRIPTION
+   Best price/qty on the order book for a symbol or symbols.
+.EXAMPLE
+   Get-BinPrice
+.INPUTS
+   Inputs to this cmdlet (if any)
+.OUTPUTS
+   Output from this cmdlet (if any)
+.NOTES
+   General notes
+.COMPONENT
+   Binance Exchange
+.ROLE
+   The role this cmdlet belongs to
+.FUNCTIONALITY
+   The functionality that best describes this cmdlet
+#>
+function Get-BinBookTicker
+{
+    [CmdletBinding(SupportsShouldProcess=$true, 
+                   PositionalBinding=$false,
+                   HelpUri = 'http://www.microsoft.com/',
+                   ConfirmImpact='Medium')]
+    [Alias()]
+    [OutputType([String[]])]
+    Param
+    (
+        # Trade symbol
+        [Parameter(Mandatory=$true, 
+                   ValueFromPipeline=$true,
+                   ValueFromPipelineByPropertyName=$true, 
+                   ValueFromRemainingArguments=$false,
+                   Position=0)]
+        [ValidateNotNullOrEmpty()]
+        $Symbol
+    )
+
+    Begin
+    {
+    }
+    Process
+    {
+        if ($pscmdlet.ShouldProcess("Target", "Operation"))
+        {
+            $message = "?symbol=$symbol"
+
+            $resource = "https://api.binance.com/api/v3/ticker/bookTicker$message"
+            $openorders = Invoke-RestMethod -Method Get -Uri "$resource" -Header @{ "X-MBX-APIKEY" = $apiKey }
+            $openorders
+        }
+    }
+    End
+    {
+    }
+}
 
 <#
 
